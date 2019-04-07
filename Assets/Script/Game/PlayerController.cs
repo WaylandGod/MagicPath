@@ -33,9 +33,8 @@ public class PlayerController : MonoBehaviour
         if (!GameManager.Instance.IsGameStarted || GameManager.Instance.IsGameOver)
             return;
         //--1--鼠标事件触发之后，被重复调用了
-        if (Input.GetMouseButtonDown(0)&&!isJumping)
+        if (Input.GetMouseButtonUp(0) && !isJumping)
         {
-            Debug.Log("单击游戏");
             //鼠标点击之后再广播这个方法
             EventCenter.Broadcast(EventDefine.DecidePath);
             isJumping = true;
@@ -53,7 +52,7 @@ public class PlayerController : MonoBehaviour
             Jump();
         }
         //游戏结束判断
-        if (my_Body.velocity.y < 0 && IsRayPlatform() == false && GameManager.Instance.IsGameOver == false)
+        if (my_Body.velocity.y < 0 && !IsRayPlatform() && !GameManager.Instance.IsGameOver)
         {
             Debug.Log("结束");
             spriteRenderer.sortingLayerName = "Default";
@@ -78,7 +77,7 @@ public class PlayerController : MonoBehaviour
         //1、origin：射线投射的原点
         //2、direction：射线投射的方向
         //3、distance：射线的长度
-        //4、layerMask：射线只会投射到layerMask层的碰撞体（注意此int参数的写法：1 << 层数）
+        //4、layerMask：射线只会投射到layerMask层的碰撞体（注意此int参数的写法：1 << 层数）检测的是哪一层
         RaycastHit2D hit = Physics2D.Raycast(rayDown.position, Vector2.down, 1f, platformLayer);
         Debug.Log("hit:" + hit);
         Debug.Log("hit.collider:" + hit.collider);
